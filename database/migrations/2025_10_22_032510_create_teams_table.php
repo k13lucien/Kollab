@@ -20,6 +20,13 @@ return new class extends Migration
             $table->foreign('leader_id')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
+
+        Schema::create('team_user', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('team_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**

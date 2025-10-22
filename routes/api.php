@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -22,4 +23,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // Actions spécifiques
     Route::post('/tasks/{task}/complete', [TaskController::class, 'complete']);
     Route::post('/tasks/{task}/suspend', [TaskController::class, 'suspend']);
+
+    Route::get('/teams', [TeamController::class, 'index']);
+    Route::post('/teams', [TeamController::class, 'store']);
+    Route::get('/teams/{id}', [TeamController::class, 'show']);
+    Route::put('/teams/{id}', [TeamController::class, 'update']);
+    Route::delete('/teams/{id}', [TeamController::class, 'destroy']);
+
+    // gestion des membres
+    Route::post('/teams/{teamId}/members', [TeamController::class, 'addMember']);
+    Route::delete('/teams/{teamId}/members/{userId}', [TeamController::class, 'removeMember']);
 });

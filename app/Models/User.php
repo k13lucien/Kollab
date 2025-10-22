@@ -49,14 +49,24 @@ class User extends Authenticatable
         ];
     }
 
-    public function team()
-    {
-        return $this->belongsTo(Team::class);
-    }
+    // public function team()
+    // {
+    //     return $this->belongsTo(Team::class);
+    // }
 
     public function tasks()
     {
         return $this->hasMany(Task::class, 'assigned_to');
+    }
+
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_user')->withTimestamps();
+    }
+
+    public function leadingTeams()
+    {
+        return $this->hasMany(Team::class, 'leader_id');
     }
 
 }

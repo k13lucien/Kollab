@@ -22,7 +22,8 @@ class Team extends Model
 
     public function members()
     {
-        return $this->hasMany(User::class);
+        //  Doit être belongsToMany pour utiliser attach()
+        return $this->belongsToMany(User::class, 'team_user')->withTimestamps();
     }
 
     public function projects()

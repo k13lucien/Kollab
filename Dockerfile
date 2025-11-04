@@ -29,8 +29,8 @@ WORKDIR /var/www
 # Copy composer files
 COPY composer.json composer.lock ./
 
-# Install PHP dependencies
-RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
+# Install PHP dependencies (including dev for Pail)
+RUN composer install --no-scripts --prefer-dist --optimize-autoloader
 
 # Copy package.json for Node dependencies
 COPY package.json ./
@@ -51,19 +51,22 @@ RUN apt-get update && apt-get install -y \
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /var/www
 
-# Copy application files
+# Copy application files first
 COPY . .
 
 # Copy .env.docker as .env
 COPY .env.docker .env
 
-# Copy vendor from builder
+# Copy vendor from builder (this will overwrite any existing vendor)
 COPY --from=builder /var/www/vendor ./vendor
 COPY --from=builder /var/www/node_modules ./node_modules
 
